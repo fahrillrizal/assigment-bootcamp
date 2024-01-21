@@ -6,36 +6,32 @@ use Illuminate\Http\Request;
 use App\Models\Kelas;
 class KelasController extends Controller
 {
-    public function listKelas()
+    public function index()
     {
         $kelas = Kelas::all();
+
         return response()->json($kelas);
     }
 
-    public function detailKelas($id)
+    public function show($id)
     {
         $kelas = Kelas::with('siswa')->find($id);
+
         return response()->json($kelas);
     }
 
-    public function simpanKelas(Request $request)
+    public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string',
-        ]);
-
         $kelas = Kelas::create($request->all());
-        return response()->json($kelas, 201);
+
+        return response()->json($kelas);
     }
 
-    public function perbaruiKelas(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama' => 'required|string',
-        ]);
-
         $kelas = Kelas::find($id);
         $kelas->update($request->all());
+
         return response()->json($kelas);
     }
 }

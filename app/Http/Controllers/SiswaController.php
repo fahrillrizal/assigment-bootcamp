@@ -4,65 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Siswa;
+use App\Models\NilaiMataPelajaranController;
 
 class SiswaController extends Controller
 {
-    public function listSiswa()
+    public function index()
     {
         $siswa = Siswa::all();
+
         return response()->json($siswa);
     }
 
-    public function detailSiswa($id)
+    public function show($id)
     {
-        $siswa = Siswa::find($id);
+        $siswa = Siswa::with(['nilai'])->find($id);
+        $siswa->nilai_akhir = $siswa->nilai->hitungNilai();
+
         return response()->json($siswa);
     }
 
-    public function simpanSiswa(Request $request)
+    public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string',
-            'kelas_id' => 'required|exists:kelas,_id',
-        ]);
-
         $siswa = Siswa::create($request->all());
-        return response()->json($siswa, 201);
+
+        return response()->json($siswa);
     }
 
-    public function perbaruiSiswa(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama' => 'required|string',
-            'kelas_id' => 'required|exists:kelas,_id',
-        ]);
-
         $siswa = Siswa::find($id);
         $siswa->update($request->all());
+
         return response()->json($siswa);
-    }
-
-    public function detailNilaiMataPelajaran($id)
-    {
-        $siswa = Siswa::find($id);
-        $nilaiMataPelajaran = $siswa->hitungNilaiMataPelajaran();
-        return response()->json($nilaiMataPelajaran);
-    }
-
-    public function simpanNilaiMataPelajaran(Request $request, $id)
-    {
-        $siswa = Siswa::find($id);
-
-        $request->validate([
-            'mata_pelajaran' => 'required|string',
-            'nilai' => 'required|numeric|min:0|max:100',
-        ]);
-
-        $siswa->nilaiMataPelajaran()->create([
-            'mata_pelajaran' => $request->input('mata_pelajaran'),
-            'nilai' => $request->input('nilai'),
-        ]);
-
-        return response()->json(['message' => 'Nilai mata pelajaran berhasil disimpan'], 201);
     }
 }

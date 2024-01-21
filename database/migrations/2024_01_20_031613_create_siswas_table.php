@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('siswas', function (Blueprint $table) {
+        Schema::create('siswa', function (Blueprint $table) {
             $table->id();
+            $table->string('nis')->unique();
             $table->string('nama');
-            $table->foreignId('kelas_id')->constrained('kelas');
-            $table->decimal('nilai_latihan_soal', 5, 2)->default(0);
-            $table->decimal('nilai_ulangan_harian', 5, 2)->default(0);
-            $table->decimal('nilai_ulangan_tengah_semester', 5, 2)->default(0);
-            $table->decimal('nilai_ulangan_semester', 5, 2)->default(0);
+            $table->string('alamat');
+            $table->foreignId('nilai_id')->constrained('nilai');
             $table->timestamps();
         });
     }

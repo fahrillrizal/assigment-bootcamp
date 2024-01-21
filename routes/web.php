@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\NilaiMataPelajaranController;
+use App\Http\Controllers\KelasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +20,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/kelas', [KelasController::class, 'listKelas']);
-Route::get('/kelas/{id}', [KelasController::class, 'detailKelas']);
-Route::post('/kelas', [KelasController::class, 'simpanKelas']);
-Route::put('/kelas/{id}', [KelasController::class, 'perbaruiKelas']);
+Route::prefix('siswa')->group(function () {
+    Route::get('/{id}', [SiswaController::class, 'show']);
+    Route::get('/', [SiswaController::class, 'index']);
+    Route::get('/{id}/detail', [SiswaController::class, 'detail']);
+    Route::get('/{id}/nilai', [SiswaController::class, 'nilai']);
+    Route::get('/{id}/nilai/detail', [SiswaController::class, 'detailNilai']);
+    Route::post('/{id}/nilai', [SiswaController::class, 'storeNilai']);
+});
 
-Route::get('/siswa', [SiswaController::class, 'listSiswa']);
-Route::get('/siswa/{id}', [SiswaController::class, 'detailSiswa']);
-Route::get('/siswa/{id}/nilai', [SiswaController::class, 'detailNilaiMataPelajaran']);
-Route::post('/siswa/{id}/nilai', [SiswaController::class, 'simpanNilaiMataPelajaran']);
+Route::prefix('nilai')->group(function () {
+    Route::get('/{id}', [NilaiMataPelajaranController::class, 'show']);
+});
+
+Route::prefix('kelas')->group(function () {
+    Route::get('/', [KelasController::class, 'index']);
+    Route::get('/{id}', [KelasController::class, 'show']);
+    Route::post('/', [KelasController::class, 'store']);
+    Route::put('/{id}', [KelasController::class, 'update']);
+});

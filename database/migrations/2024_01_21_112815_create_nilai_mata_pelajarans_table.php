@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('nilai_mata_pelajarans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('siswa_id')->constrained();
-            $table->string('mata_pelajaran');
-            $table->integer('nilai');
+            $table->json('mata_pelajaran');
+            $table->json('latihan_soal');
+            $table->json('ulangan_harian');
+            $table->decimal('ulangan_tengah_semester', 5, 2);
+            $table->decimal('ulangan_semester', 5, 2);
             $table->timestamps();
         });
     }
